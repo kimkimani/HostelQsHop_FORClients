@@ -1,0 +1,24 @@
+<resources>
+<string name="app_name">AndroidBooking</string>
+    <string name="FACEBOOK_APP_ID">2226548270762709</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">05d8dd78d4429ce789ef71482cba1539</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+<string name="hello_blank_fragment">Hello blank fragment</string>
+<string name="address_bullet">\u2022 Address:</string>
+<string name="time_bullet">\u2022 Time:</string>
+<string name="stylelist_bullet">\u2022 Stylelist:</string>
+<string name="bullet">\u2022</string>
+<string name="just_skip">Just Skip</string>
+<string name="login">Login</string>
+<string name="home">Home</string>
+<string name="shopping">Shopping</string>
+<string name="collection_user">User</string>
+<string name="your_name">Your Name</string>
+<string name="your_address">Your Address</string>
+<string name="update">Update</string>
+<string name="collection_banner">Banner</string>
+<string name="collection_loogbook">LookBook</string>
+<string name="salon_1">Salon #1</string>
+<string name="address_of_salon_1">Address of Salon #1</string>
+</resources>
