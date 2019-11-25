@@ -1,10 +1,6 @@
 package ydkim2110.com.androidbarberbooking.Fragments;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +26,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,7 +81,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
 //        public void onReceive(Context context, Intent intent) {
 //            Calendar date = Calendar.getInstance();
 //            date.add(Calendar.DATE, 0);
-//            loadAvailableTimeSlotOfBarber(Common.currentBarber.getBarberId(),
+//            loadAvailableTimeSlotOfBarber(Common.currentHostel.getHostelId(),
 //                    mSimpleDateFormat.format(date.getTime()));
 //        }
 //    };
@@ -116,7 +111,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
             // In Booking activity, we have pass this event with isDisplay = true
             Calendar date = Calendar.getInstance();
             date.add(Calendar.DATE, 0);
-            loadAvailableTimeSlotOfBarber(Common.currentBarber.getBarberId(),
+            loadAvailableTimeSlotOfBarber(Common.currentHostel.getHostelId(),
                     mSimpleDateFormat.format(date.getTime()));
         }
     }
@@ -130,11 +125,11 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
 ///gender/gents/Branch/4jydSfTfDi3o26owKCFp/Hostel
         barberDoc = FirebaseFirestore.getInstance()
                 .collection("gender")
-                .document(Common.city)
+                .document(Common.gender)
                 .collection("Branch")
-                .document(Common.currentSalon.getSalonId())
+                .document(Common.currentHostelArea.getHoatelAreaId())
                 .collection("Hostel")
-                .document(Common.currentBarber.getBarberId());
+                .document(Common.currentHostel.getHostelId());
 
         // Get information of this barber
         barberDoc.get()
@@ -149,11 +144,11 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
                                 // If not created, return empty;
                                 CollectionReference date = FirebaseFirestore.getInstance()
                                         .collection("gender")
-                                        .document(Common.city)
+                                        .document(Common.gender)
                                         .collection("Branch")
-                                        .document(Common.currentSalon.getSalonId())
+                                        .document(Common.currentHostelArea.getHoatelAreaId())
                                         .collection("Hostel")
-                                        .document(Common.currentBarber.getBarberId())
+                                        .document(Common.currentHostel.getHostelId())
                                         // bookDate is date simpleformat with dd_MM_yyyy = 28_03_2019
                                         .collection(bookDate);
 
@@ -257,7 +252,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
                 if (Common.bookingDate.getTimeInMillis() != date.getTimeInMillis()) {
                     // This code will not load again if you select new day same with day selected
                     Common.bookingDate = date;
-                    loadAvailableTimeSlotOfBarber(Common.currentBarber.getBarberId(),
+                    loadAvailableTimeSlotOfBarber(Common.currentHostel.getHostelId(),
                             mSimpleDateFormat.format(date.getTime()));
                 }
             }

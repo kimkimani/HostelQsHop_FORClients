@@ -1,22 +1,14 @@
 package ydkim2110.com.androidbarberbooking.Fragments;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,10 +19,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import ydkim2110.com.androidbarberbooking.Adapter.MyBarberAdapter;
-import ydkim2110.com.androidbarberbooking.Common.Common;
+import ydkim2110.com.androidbarberbooking.Adapter.MyHostelAdapter;
 import ydkim2110.com.androidbarberbooking.Common.SpaceItemDecoration;
-import ydkim2110.com.androidbarberbooking.Model.Barber;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.BarberDoneEvent;
 import ydkim2110.com.androidbarberbooking.R;
 
@@ -50,8 +40,8 @@ public class BookingStep2Fragment extends Fragment {
     private Unbinder mUnbinder;
     // private LocalBroadcastManager mLocalBroadcastManager;
 
-    @BindView(R.id.recycler_barber)
-    RecyclerView recycler_barber;
+    @BindView(R.id.recycler_Hostel)
+    RecyclerView recycler_Hostel;
     @BindView(R.id.no_item)
     TextView no_item;
 
@@ -64,16 +54,16 @@ public class BookingStep2Fragment extends Fragment {
 ////        @Override
 ////        public void onReceive(Context context, Intent intent) {
 ////            Log.d(TAG, "onReceive: Step2 BroadcastReceiver called!!");
-////            ArrayList<Barber> barberArrayList = intent.getParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE);
+////            ArrayList<Hostel> barberArrayList = intent.getParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE);
 ////            // Create adapter
 ////            if (barberArrayList.size() == 0) {
 ////                no_item.setVisibility(View.VISIBLE);
-////                recycler_barber.setVisibility(View.GONE);
+////                recycler_Hostel.setVisibility(View.GONE);
 ////            } else {
 ////                no_item.setVisibility(View.GONE);
-////                recycler_barber.setVisibility(View.VISIBLE);
-////                MyBarberAdapter adapter = new MyBarberAdapter(getContext(), barberArrayList);
-////                recycler_barber.setAdapter(adapter);
+////                recycler_Hostel.setVisibility(View.VISIBLE);
+////                MyHostelAdapter adapter = new MyHostelAdapter(getContext(), barberArrayList);
+////                recycler_Hostel.setAdapter(adapter);
 ////            }
 ////        }
 ////    };
@@ -95,8 +85,8 @@ public class BookingStep2Fragment extends Fragment {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void setBarberAdapter(BarberDoneEvent event) {
-        MyBarberAdapter adapter = new MyBarberAdapter(getContext(), event.getBarberList());
-        recycler_barber.setAdapter(adapter);
+        MyHostelAdapter adapter = new MyHostelAdapter(getContext(), event.getBarberList());
+        recycler_Hostel.setAdapter(adapter);
     }
     //=============================================================================
 
@@ -134,9 +124,9 @@ public class BookingStep2Fragment extends Fragment {
     }
 
     private void initView() {
-        recycler_barber.setHasFixedSize(true);
-        recycler_barber.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        recycler_barber.addItemDecoration(new SpaceItemDecoration(4));
+        recycler_Hostel.setHasFixedSize(true);
+        recycler_Hostel.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recycler_Hostel.addItemDecoration(new SpaceItemDecoration(4));
     }
 
 }

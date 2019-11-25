@@ -2,21 +2,21 @@ package ydkim2110.com.androidbarberbooking.Model.EventBus;
 
 import java.util.List;
 
-import ydkim2110.com.androidbarberbooking.Model.Barber;
+import ydkim2110.com.androidbarberbooking.Model.Hostel;
 
 public class BarberDoneEvent {
 
-    private List<Barber> mBarberList;
+    private List<Hostel> mHostelList;
 
-    public BarberDoneEvent(List<Barber> barberList) {
-        mBarberList = barberList;
+    public BarberDoneEvent(List<Hostel> hostelList) {
+        mHostelList = hostelList;
     }
 
-    public List<Barber> getBarberList() {
-        return mBarberList;
+    public List<Hostel> getBarberList() {
+        return mHostelList;
     }
 
-    public void setBarberList(List<Barber> barberList) {
-        mBarberList = barberList;
+    public void setBarberList(List<Hostel> hostelList) {
+        mHostelList = hostelList;
     }
 }

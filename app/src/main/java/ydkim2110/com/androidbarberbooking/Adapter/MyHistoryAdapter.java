@@ -37,9 +37,9 @@ public class MyHistoryAdapter extends RecyclerView.Adapter<MyHistoryAdapter.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.txt_salon_name.setText(mBookingInformationList.get(position).getSalonName());
-        holder.txt_salon_address.setText(mBookingInformationList.get(position).getSalonAddress());
-        holder.txt_booking_barber.setText(mBookingInformationList.get(position).getBarberName());
+        holder.txt_salon_name.setText(mBookingInformationList.get(position).getHoatelAreaName());
+        holder.txt_salon_address.setText(mBookingInformationList.get(position).getHoatelAreaAddress());
+        holder.txt_booking_barber.setText(mBookingInformationList.get(position).getHostelName());
         holder.txt_booking_time.setText(mBookingInformationList.get(position).getTime());
     }
 

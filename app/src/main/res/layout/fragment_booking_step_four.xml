@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/payment_group"
     android:background="@color/colorBackground">
 
-    <ImageView
-        android:src="@drawable/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        />
+<!--    <ImageView-->
+<!--        android:src="@drawable/qless_resize"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        />-->
+
 
     <LinearLayout
         android:padding="8dp"
@@ -50,7 +52,7 @@
 
             <TextView
                 android:id="@+id/txt_booking_time_text"
-                android:text="10h00 at 28/03/2019"
+                android:text="ROOM nuMber at 28/03/2019"
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -65,14 +67,14 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/ic_account_circle_black_24dp"
+                android:src="@drawable/ic_home_black_24dp"
                 android:layout_gravity="bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/txt_booking_barber_text"
-                android:text="David"
+                android:text="Mt Kenya"
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -89,7 +91,7 @@
         
         <TextView
             android:id="@+id/txt_salon_name"
-            android:text="Salon #1"
+            android:text="Hostel Contacts"
             android:textAllCaps="true"
             android:fontFamily="@font/bellerose"
             android:textStyle="bold"
@@ -109,7 +111,7 @@
 
             <TextView
                 android:id="@+id/txt_salon_website"
-                android:text="http://youtube.com/ydkim2110"
+                android:text=""
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -131,7 +133,7 @@
 
             <TextView
                 android:id="@+id/txt_salon_phone"
-                android:text="+82-10-3453-4435"
+                android:text=""
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -153,7 +155,7 @@
 
             <TextView
                 android:id="@+id/txt_salon_open_hours"
-                android:text="9h00 ~ 19h00"
+                android:text=""
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -175,7 +177,7 @@
 
             <TextView
                 android:id="@+id/txt_salon_salon_address"
-                android:text="Address of Salon #1"
+                android:text="Address of Hostel #1"
                 android:textSize="14sp"
                 android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
@@ -183,11 +185,44 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:src="@drawable/ic_monetization_on_black_24dp"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/txt_total"
+                android:text="10000"
+                android:textSize="14sp"
+                android:layout_marginStart="4dp"
+                android:fontFamily="@font/bellerose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/pay"
+            android:text="PAY HERE"
+            android:visibility="visible"
+            android:layout_marginTop="8dp"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/bellerose"
+            android:backgroundTint="@color/colorButton"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/txt_skip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn_confirm"
             android:text="CONFIRM"
             android:layout_marginTop="8dp"
+            android:visibility="visible"
             android:textColor="@android:color/white"
             android:fontFamily="@font/bellerose"
             android:backgroundTint="@color/colorButton"

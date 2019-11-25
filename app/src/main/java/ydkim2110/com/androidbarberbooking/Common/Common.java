@@ -35,32 +35,44 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.paperdb.Paper;
-import ydkim2110.com.androidbarberbooking.HomeActivity;
-import ydkim2110.com.androidbarberbooking.Model.Barber;
+import ydkim2110.com.androidbarberbooking.Database.CartDAO;
+import ydkim2110.com.androidbarberbooking.Database.DataSource.CartRepository;
+import ydkim2110.com.androidbarberbooking.Database.DataSource.ICartDataSource;
+import ydkim2110.com.androidbarberbooking.Model.Hostel;
 import ydkim2110.com.androidbarberbooking.Model.BookingInformation;
 import ydkim2110.com.androidbarberbooking.Model.MyToken;
-import ydkim2110.com.androidbarberbooking.Model.Salon;
+import ydkim2110.com.androidbarberbooking.Model.ShoppingItem;
+import ydkim2110.com.androidbarberbooking.Model.hostelArea;
 import ydkim2110.com.androidbarberbooking.Model.User;
+import ydkim2110.com.androidbarberbooking.PDF;
 import ydkim2110.com.androidbarberbooking.R;
-import ydkim2110.com.androidbarberbooking.Service.MyFCMService;
+import ydkim2110.com.androidbarberbooking.Retrofit.IDrinkShopAPI;
+import ydkim2110.com.androidbarberbooking.Retrofit.RetrofitP;
+import ydkim2110.com.androidbarberbooking.Retrofit.RetrofitScalarsClient;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class Common {
 
+    public static final String BASE_URL = "http://tipsscorepro.com/";
+    public static final String API_CHECKOUT_URL = "http://tipsscorepro.com/Payment/checkout.php";
+    public static final String API_TOKEN_URL = "http://tipsscorepro.com/Payment/main.php";
     public static final String KEY_ENABLE_BUTTON_NEXT = "ENABLE_BUTTON_NEXT";
     public static final String KEY_UNABLE_BUTTON_NEXT = "UNABLE_BUTTON_NEXT";
     public static final String KEY_SALON_STORE = "SALON_STORE";
     public static final String KEY_BARBER_LOAD_DONE = "BARBER_LOAD_DONE";
     public static final String KEY_DISPLAY_TIME_SLOT = "DISPLAY_TIME_SLOT";
     public static final String KEY_STEP = "STEP";
+    public static final int MAX_NOTIFICATION_PER_LOAD = 10;
     public static final String KEY_BARBER_SELECTED = "BARBER_SELECTED";
     public static final int TIME_SLOT_TOTAL = 20;
     public static final Object DISABLE_TAG = "DISABLE";
@@ -76,65 +88,75 @@ public class Common {
     public static final String RATING_SALON_ID = "RATING_SALON_ID";
     public static final String RATING_SALON_NAME = "RATING_SALON_NAME";
     public static final String RATING_BARBER_ID = "RATING_BARBER_ID";
+    public static final double DEFAULT_PRICE = 30000;
+    public static final String MONEY_SIGN = "Ksh";
 
+    public static String currentBookingId = "";
     public static User currentUser;
-    public static Salon currentSalon;
-    public static Barber currentBarber;
+    public static hostelArea currentHostelArea;
+    public static Hostel currentHostel;
+    public  static List<ShoppingItem> mShoppingItemList;
     public static BookingInformation currentBooking;
     public static int currentTimeSlot=-1;
     public static int step = 0;
     public static String IS_LOGIN = "IsLogin";
-    public static String city = "";
-    public static String currentBookingId = "";
+    public static String gender = "";
 
     public static Calendar bookingDate = Calendar.getInstance();
     public static SimpleDateFormat simpleFormatDate = new SimpleDateFormat("dd_MM_yyyy");
+    public static CartRepository cartRepository;
 
     public static String convertTimeSlotToString(int position) {
         switch (position) {
             case 0:
-                return "1 ~ 1";
+                return "RM 1 HEAD 1";
             case 1:
-                return "1 ~ 2";
+                return "RM 1 HEAD 2";
             case 2:
-                return "10 ~ 1";
+                return "RM 2 HEAD 1";
             case 3:
-                return "1.00 ~ 1.00";
+                return "RM 2 HEAD 2";
             case 4:
-                return "1.00 ~ 2.00";
+                return "RM 3 HEAD 1";
             case 5:
-                return "11:30 ~ 12:00";
+                return "RM 3 HEAD 2";
             case 6:
-                return "12:00 ~ 12:30";
+                return "RM 4 HEAD 1";
             case 7:
-                return "12:30 ~ 13:00";
+                return "RM 4 HEAD 2";
             case 8:
-                return "13:00 ~ 13:30";
+                return "RM 5 HEAD 1";
             case 9:
-                return "13:30 ~ 14:00";
+                return "RM 5 HEAD 2";
             case 10:
-                return "14:00 ~ 14:30";
+                return "RM 6 HEAD 1";
             case 11:
-                return "14:30 ~ 15:00";
+                return "RM 6 HEAD 2";
             case 12:
-                return "15:00 ~ 15:30";
+                return "RM 7 HEAD 1";
             case 13:
-                return "15:30 ~ 16:00";
+                return "RM 7 HEAD 2";
             case 14:
-                return "16:00 ~ 16:30";
+                return "RM 8 HEAD 1";
             case 16:
-                return "16:30 ~ 17:00";
+                return "RM 9 HEAD 1";
             case 17:
-                return "17:00 ~ 17:30";
+                return "RM 9 HEAD 2";
             case 18:
-                return "17:30 ~ 18:00";
+                return "RM 10 HEAD 1";
             case 19:
-                return "18:00 ~ 18:30";
+                return "RM 10 HEAD 2";
             case 20:
-                return "18:30 ~ 19:00";
+                return "RM 10 HEAD 3";
                 default:
                     return "Closed!";
         }
+    }
+    public static IDrinkShopAPI getAPI() {
+        return RetrofitP.getClient(BASE_URL).create(IDrinkShopAPI.class);
+    }
+    public static IDrinkShopAPI getScalarsAPI() {
+        return RetrofitScalarsClient.getScalarsClient(BASE_URL).create(IDrinkShopAPI.class);
     }
 
     public static String convertTimeSlotToStringKey(Timestamp timestamp) {
@@ -156,7 +178,7 @@ public class Common {
                     PendingIntent.FLAG_UPDATE_CURRENT);
         }
 
-        String NOTIFICATION_CHANNEL_ID = "ydkim2110_barber_client_app";
+        String NOTIFICATION_CHANNEL_ID = "HostelBooking_client_app";
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -193,13 +215,13 @@ public class Common {
     public static void showRatingDialog(Context context, String stateName, String salonID,
                                         String salonName, String barberId) {
         Log.d(TAG, "showRatingDialog: called!!");
-        // First, we need get DocumentReference of Barber
+        // First, we need get DocumentReference of Hostel
         DocumentReference barberNeedRateRef = FirebaseFirestore.getInstance()
-                .collection("AllSalon")
+                .collection("gender")
                 .document(stateName)
                 .collection("Branch")
                 .document(salonID)
-                .collection("Barber")
+                .collection("Hostel")
                 .document(barberId);
 
         barberNeedRateRef.get()
@@ -215,8 +237,8 @@ public class Common {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Log.d(TAG, "onComplete: called!!");
                         if (task.isSuccessful()) {
-                            Barber barberRate = task.getResult().toObject(Barber.class);
-                            barberRate.setBarberId(task.getResult().getId());
+                            Hostel hostelRate = task.getResult().toObject(Hostel.class);
+                            hostelRate.setHostelId(task.getResult().getId());
 
                             // Create View for dialog
                             View view = LayoutInflater.from(context)
@@ -224,12 +246,12 @@ public class Common {
 
                             // Widget
                             TextView txt_salon_name = view.findViewById(R.id.txt_salon_name);
-                            TextView txt_barber_name = view.findViewById(R.id.txt_barber_name);
+                            TextView txt_barber_name = view.findViewById(R.id.txt_hostel_name);
                             AppCompatRatingBar ratingBar = view.findViewById(R.id.rating);
 
                             // Set Info
                             txt_salon_name.setText(salonName);
-                            txt_barber_name.setText(barberRate.getName());
+                            txt_barber_name.setText(hostelRate.getName());
 
                             // Create Dialog
                             AlertDialog.Builder builder = new AlertDialog.Builder(context)
@@ -241,8 +263,8 @@ public class Common {
                                             // IF select OK, we will update
                                             // rating information to FireStore
 
-                                            Double original_rating = barberRate.getRating();
-                                            Long ratingTimes = barberRate.getRatingTimes();
+                                            Double original_rating = hostelRate.getRating();
+                                            Long ratingTimes = hostelRate.getRatingTimes();
                                             float userRating = ratingBar.getRating();
 
                                             Double finalRating = (original_rating+userRating);
@@ -301,9 +323,26 @@ public class Common {
 
     }
 
+    public static String getAppPath(Context context) {
+        File dir = new File(android.os.Environment.getExternalStorageDirectory()
+
+                + File.separator
+                + context.getResources().getString((R.string.app_name))
+                + File.separator
+        );
+        if (dir.exists())
+
+            dir.mkdir();
+            return dir.getPath()+File.separator;
+
+
+
+
+    }
+
     public static enum TOKEN_TYPE {
         CLIENT,
-        BARBER,
+        Admin,
         MANAGER
     }
 

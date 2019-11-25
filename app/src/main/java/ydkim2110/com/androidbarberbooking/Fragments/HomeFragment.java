@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
@@ -64,6 +66,8 @@ import ydkim2110.com.androidbarberbooking.Interface.IBookingInfoLoadListener;
 import ydkim2110.com.androidbarberbooking.Interface.IBookingInformationChangeListener;
 import ydkim2110.com.androidbarberbooking.Interface.ICountItemInCartListener;
 import ydkim2110.com.androidbarberbooking.Interface.ILookbookLoadListener;
+import ydkim2110.com.androidbarberbooking.Interface.INotificationCountListener;
+import ydkim2110.com.androidbarberbooking.InvoiveNotificationsActivity;
 import ydkim2110.com.androidbarberbooking.Model.Banner;
 import ydkim2110.com.androidbarberbooking.Model.BookingInformation;
 import ydkim2110.com.androidbarberbooking.R;
@@ -71,12 +75,25 @@ import ydkim2110.com.androidbarberbooking.Service.PicassoImageLoadingService;
 
 public class HomeFragment extends Fragment
         implements ILookbookLoadListener, IBannerLoadListener, IBookingInfoLoadListener,
-        IBookingInformationChangeListener, ICountItemInCartListener {
+        IBookingInformationChangeListener, ICountItemInCartListener,INotificationCountListener{
 
     private static final String TAG = HomeFragment.class.getSimpleName();
     private Unbinder unbinder;
     private AlertDialog mDialog;
     private CartDatabase mCartDatabase;
+    private TextView txt_notification_badge;
+    private TextView txt_barber_name;
+
+    CollectionReference notificationCollection;
+    CollectionReference currentBookDateCollection;
+
+    EventListener<QuerySnapshot> notificationEvent;
+    EventListener<QuerySnapshot> bookingEvent;
+
+    ListenerRegistration notificationListener;
+
+
+    INotificationCountListener mINotificationCountListener;
 
     @BindView(R.id.layout_user_information)
     LinearLayout layout_user_information;
@@ -84,10 +101,14 @@ public class HomeFragment extends Fragment
     TextView txt_user_name;
     @BindView(R.id.txt_member_type)
     TextView txt_member_type;
+    @BindView(R.id.txt_member_phone)
+    TextView txt_member_phone;
     @BindView(R.id.banner_slider)
     Slider banner_slider;
     @BindView(R.id.recycler_look_book)
     RecyclerView recycler_look_book;
+
+    //yser booking info on home fragment after successful booking
     @BindView(R.id.card_view_booking)
     CardView card_view_booking;
     @BindView(R.id.card_booking_info)
@@ -98,8 +119,13 @@ public class HomeFragment extends Fragment
     TextView txt_salon_barber;
     @BindView(R.id.txt_time)
     TextView txt_time;
-    @BindView(R.id.txt_time_remain)
+    //@BindView(R.id.txt_time_remain)
     TextView txt_time_remain;
+
+
+
+
+
     @BindView(R.id.notification_badge)
     NotificationBadge notification_badge;
     @OnClick(R.id.card_view_booking)
@@ -126,6 +152,10 @@ public class HomeFragment extends Fragment
     void openHistoryActivity() {
         startActivity(new Intent(getActivity(), HistoryActivity.class));
     }
+    @OnClick(R.id.card_view_notify)
+    void openInvoiceActivityActivity() {
+        startActivity(new Intent(getActivity(), InvoiveNotificationsActivity.class));
+    }
 
     private void changeBookingFromUser() {
         androidx.appcompat.app.AlertDialog.Builder confirmDialog =
@@ -151,7 +181,7 @@ public class HomeFragment extends Fragment
     private void deleteBookingFromBarber(boolean isChange) {
         Log.d(TAG, "deleteBookingFromUser: called!!");
 
-        // To delete booking, first we need delete from Barber Collection
+        // To delete booking, first we need delete from Hostel Collection
         // After that, we will delete from User booking collection
         // And final, delete event
 
@@ -164,9 +194,9 @@ public class HomeFragment extends Fragment
                     .collection("gender")
                     .document(Common.currentBooking.getCityBook())
                     .collection("Branch")
-                    .document(Common.currentBooking.getSalonId())
+                    .document(Common.currentBooking.getHoatelAreaId())
                     .collection("Hostel")
-                    .document(Common.currentBooking.getBarberId())
+                    .document(Common.currentBooking.getHostelId())
                     .collection(Common.convertTimeSlotToStringKey(Common.currentBooking.getTimestamp()))
                     .document(Common.currentBooking.getSlot().toString());
 
@@ -182,7 +212,7 @@ public class HomeFragment extends Fragment
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            // After delete on Barber done
+                            // After delete on Hostel done
                             // We will start delete from User
                             deleteBookingFromUser(isChange);
                         }
@@ -281,6 +311,7 @@ public class HomeFragment extends Fragment
         super.onResume();
         loadUserBooking();
         countCartItem();
+        initNotificationRealtimeUpdate();
     }
 
     private void loadUserBooking() {
@@ -350,14 +381,16 @@ public class HomeFragment extends Fragment
         unbinder = ButterKnife.bind(this, view);
 
         mCartDatabase = CartDatabase.getInstance(getContext());
+        txt_notification_badge = view.findViewById(R.id.invoice_notification);
 
+        txt_notification_badge.setText("");
         // Init
         Slider.init(new PicassoImageLoadingService());
         iBannerLoadListener = this;
         iLookbookLoadListener = this;
         mIBookingInfoLoadListener = this;
         mIBookingInformationChangeListener = this;
-
+        mINotificationCountListener = this;
         // Check is logged?
         if (AccountKit.getCurrentAccessToken() != null) {
             setUserInformation();
@@ -448,6 +481,8 @@ public class HomeFragment extends Fragment
     private void setUserInformation() {
         layout_user_information.setVisibility(View.VISIBLE);
         txt_user_name.setText(Common.currentUser.getName());
+        txt_member_phone.setText(Common.currentUser.getPhoneNumber());
+        txt_member_type.setText(Common.currentUser.getAddress());
     }
 
     @Override
@@ -463,8 +498,7 @@ public class HomeFragment extends Fragment
         Log.d(TAG, "onLookbookLoadFailed: called!!");
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
-
-    @Override
+        @Override
     public void onBannerLoadSuccess(List<Banner> banners) {
         Log.d(TAG, "onBannerLoadSuccess: called!!");
         banner_slider.setAdapter(new HomeSliderAdapter(banners));
@@ -481,6 +515,7 @@ public class HomeFragment extends Fragment
         card_booking_info.setVisibility(View.GONE);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBookingInfoLoadSuccess(BookingInformation bookingInformation, String bookingId) {
         Log.d(TAG, "onBookingInfoLoadSuccess: called!!");
@@ -488,13 +523,13 @@ public class HomeFragment extends Fragment
         Common.currentBooking = bookingInformation;
         Common.currentBookingId = bookingId;
 
-        txt_salon_address.setText(bookingInformation.getSalonAddress());
-        txt_salon_barber.setText(bookingInformation.getBarberName());
-        txt_time.setText(bookingInformation.getTime());
-        String dateRemain = DateUtils.getRelativeTimeSpanString(
-                Long.valueOf(bookingInformation.getTimestamp().toDate().getTime()),
-                Calendar.getInstance().getTimeInMillis(), 0).toString();
-        txt_time_remain.setText(dateRemain);
+        txt_salon_address.setText(bookingInformation.getHoatelAreaAddress());
+        txt_salon_barber.setText(bookingInformation.getHostelName());
+        txt_time.setText(Common.currentBooking.getCityBook());
+//        String dateRemain = DateUtils.getRelativeTimeSpanString(
+//                Long.valueOf(bookingInformation.getTimestamp().toDate().getTime()),
+//                Calendar.getInstance().getTimeInMillis(), 0).toString();
+//        txt_time_remain.setText(Common.currentTimeSlot);
 
         card_booking_info.setVisibility(View.VISIBLE);
 
@@ -524,11 +559,85 @@ public class HomeFragment extends Fragment
         }
     }
 
+    private void loadNotification() {
+        Log.d(TAG, "loadNotification: called!!");
+
+        notificationCollection.whereEqualTo("read", false)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            mINotificationCountListener.onNotificationCountSuccess(task.getResult().size());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void initNotificationRealtimeUpdate() {
+        Log.d(TAG, "initNotificationRealtimeUpdate: called!!");
+///gender/gents/Branch/4jydSfTfDi3o26owKCFp/Hostel
+
+        notificationCollection = FirebaseFirestore.getInstance()
+                .collection("User")
+                .document(Common.currentUser.getPhoneNumber())
+                .collection("Notifications");
+
+        notificationEvent = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                if (queryDocumentSnapshots.size() > 0) {
+                    loadNotification();
+                }
+            }
+        };
+
+        // Only listen and count all notification unread
+        notificationListener = notificationCollection.whereEqualTo("read", false)
+                .addSnapshotListener(notificationEvent);
+    }
+    @Override
+    public void onNotificationCountSuccess(int count) {
+        Log.d(TAG, "onNotificationCountSuccess: called!!");
+        if (count == 0) {
+            txt_notification_badge.setVisibility(View.INVISIBLE);
+        }
+        else {
+            txt_notification_badge.setVisibility(View.VISIBLE);
+            if (count <= 9) {
+                txt_notification_badge.setText(String.valueOf(count));
+            }
+            else {
+                txt_notification_badge.setText("9+");
+            }
+        }
+    }
     @Override
     public void onDestroy() {
         if (userBookingListener != null)
             userBookingListener.remove();
         super.onDestroy();
+    }
+    @Override
+    public void onStop() {
+        if (notificationListener != null) {
+            notificationListener.remove();
+        }
+
+        super.onStop();
+    }
+
+    private void init() {
+        Log.d(TAG, "init: called!!");
+
+        mINotificationCountListener = this;
+        initNotificationRealtimeUpdate();
+
     }
 }
 ///gender/gents/Branch/4jydSfTfDi3o26owKCFp/Hostel

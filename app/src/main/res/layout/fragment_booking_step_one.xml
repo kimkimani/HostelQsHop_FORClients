@@ -12,14 +12,14 @@
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_salon"
+        android:id="@+id/recycler_HostelArea"
         android:layout_marginTop="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/no_item"
-        android:text="준비중입니다."
+        android:text="select gender."
         android:gravity="center"
         android:visibility="gone"
         android:layout_width="match_parent"

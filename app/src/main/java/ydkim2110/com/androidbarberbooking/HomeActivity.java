@@ -14,6 +14,7 @@ import ydkim2110.com.androidbarberbooking.Fragments.ShoppingFragment;
 import ydkim2110.com.androidbarberbooking.Model.User;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -157,6 +158,9 @@ public class HomeActivity extends AppCompatActivity {
                     fragment = new HomeFragment();
                 } else if (menuItem.getItemId() == R.id.action_shopping) {
                     fragment = new ShoppingFragment();
+                }
+                else if (menuItem.getItemId() == R.id.action_Recipt) {
+                    startActivity(new Intent(HomeActivity.this, Reciept.class));
                 }
                 return loadFragment(fragment);
             }

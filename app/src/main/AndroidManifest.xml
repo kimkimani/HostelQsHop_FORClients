@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,10 +16,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".Reciept"></activity>
+        <activity android:name=".PDF" />
+        <activity android:name="com.paridhigupta.qless.Paytree" />
+        <activity android:name=".InvoiveNotificationsActivity" />
+        <activity android:name=".HistoryActivity" />
         <activity android:name=".CartActivity" />
         <activity android:name=".BookingActivity" />
         <activity android:name=".HomeActivity" />
+        <activity android:name=".WalletActivity" />
 
         <meta-data
             android:name="com.facebook.accountkit.ApplicationName"
@@ -44,6 +50,19 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity
+            android:name=".permission.PermissionsActivity"
+            android:screenOrientation="portrait" /> <!-- File Provider -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.paridhigupta.qless.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

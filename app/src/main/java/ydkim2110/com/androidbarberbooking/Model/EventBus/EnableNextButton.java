@@ -1,23 +1,23 @@
 package ydkim2110.com.androidbarberbooking.Model.EventBus;
 
-import ydkim2110.com.androidbarberbooking.Model.Barber;
-import ydkim2110.com.androidbarberbooking.Model.Salon;
+import ydkim2110.com.androidbarberbooking.Model.Hostel;
+import ydkim2110.com.androidbarberbooking.Model.hostelArea;
 
 public class EnableNextButton {
 
     private int step;
-    private Barber barber;
-    private Salon salon;
+    private Hostel hostel;
+    private hostelArea hostelArea;
     private int timeSlot;
 
-    public EnableNextButton(int step, Barber barber) {
+    public EnableNextButton(int step, Hostel hostel) {
         this.step = step;
-        this.barber = barber;
+        this.hostel = hostel;
     }
 
-    public EnableNextButton(int step, Salon salon) {
+    public EnableNextButton(int step, hostelArea hostelArea) {
         this.step = step;
-        this.salon = salon;
+        this.hostelArea = hostelArea;
     }
 
     public EnableNextButton(int step, int timeSlot) {
@@ -33,20 +33,20 @@ public class EnableNextButton {
         this.step = step;
     }
 
-    public Barber getBarber() {
-        return barber;
+    public Hostel getHostel() {
+        return hostel;
     }
 
-    public void setBarber(Barber barber) {
-        this.barber = barber;
+    public void setHostel(Hostel hostel) {
+        this.hostel = hostel;
     }
 
-    public Salon getSalon() {
-        return salon;
+    public hostelArea getHostelArea() {
+        return hostelArea;
     }
 
-    public void setSalon(Salon salon) {
-        this.salon = salon;
+    public void setHostelArea(hostelArea hostelArea) {
+        this.hostelArea = hostelArea;
     }
 
     public int getTimeSlot() {

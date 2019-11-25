@@ -17,22 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ydkim2110.com.androidbarberbooking.Interface.IRecyclerItemSelectedListener;
-import ydkim2110.com.androidbarberbooking.Model.Barber;
+import ydkim2110.com.androidbarberbooking.Model.Hostel;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.EnableNextButton;
 import ydkim2110.com.androidbarberbooking.R;
 
-public class MyBarberAdapter extends RecyclerView.Adapter<MyBarberAdapter.MyViewHolder> {
+public class MyHostelAdapter extends RecyclerView.Adapter<MyHostelAdapter.MyViewHolder> {
 
-    private static final String TAG = MyBarberAdapter.class.getSimpleName();
+    private static final String TAG = MyHostelAdapter.class.getSimpleName();
 
     private Context mContext;
-    private List<Barber> mBarberList;
+    private List<Hostel> mHostelList;
     private List<CardView> mCardViewList;
     //private LocalBroadcastManager mLocalBroadcastManager;
 
-    public MyBarberAdapter(Context context, List<Barber> barberList) {
+    public MyHostelAdapter(Context context, List<Hostel> hostelList) {
         mContext = context;
-        mBarberList = barberList;
+        mHostelList = hostelList;
         mCardViewList = new ArrayList<>();
         //mLocalBroadcastManager = LocalBroadcastManager.getInstance(context);
     }
@@ -41,17 +41,17 @@ public class MyBarberAdapter extends RecyclerView.Adapter<MyBarberAdapter.MyView
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext)
-                .inflate(R.layout.layout_barber, parent, false);
+                .inflate(R.layout.layout_hostel, parent, false);
 
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.txt_barber_name.setText(mBarberList.get(position).getName());
-        if (mBarberList.get(position).getRatingTimes() != null) {
-            holder.ratingBar.setRating(mBarberList.get(position).getRating().floatValue() /
-                    mBarberList.get(position).getRatingTimes());
+        holder.txt_barber_name.setText(mHostelList.get(position).getName());
+        if (mHostelList.get(position).getRatingTimes() != null) {
+            holder.ratingBar.setRating(mHostelList.get(position).getRating().floatValue() /
+                    mHostelList.get(position).getRatingTimes());
         }
         else {
             holder.ratingBar.setRating(0);
@@ -76,19 +76,19 @@ public class MyBarberAdapter extends RecyclerView.Adapter<MyBarberAdapter.MyView
 
                 // Send local broadcast to enable button next
 //                Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
-//                intent.putExtra(Common.KEY_BARBER_SELECTED, mBarberList.get(position));
+//                intent.putExtra(Common.KEY_BARBER_SELECTED, mHostelList.get(position));
 //                intent.putExtra(Common.KEY_STEP, 2);
 //                mLocalBroadcastManager.sendBroadcast(intent);
 
                 // EventBus
-                EventBus.getDefault().postSticky(new EnableNextButton(2, mBarberList.get(position)));
+                EventBus.getDefault().postSticky(new EnableNextButton(2, mHostelList.get(position)));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mBarberList.size();
+        return mHostelList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -107,8 +107,8 @@ public class MyBarberAdapter extends RecyclerView.Adapter<MyBarberAdapter.MyView
             super(itemView);
 
             card_barber = itemView.findViewById(R.id.card_barber);
-            txt_barber_name = itemView.findViewById(R.id.txt_barber_name);
-            ratingBar = itemView.findViewById(R.id.rtb_barber);
+            txt_barber_name = itemView.findViewById(R.id.hostel_name);
+            ratingBar = itemView.findViewById(R.id.rtb_hostel);
 
             itemView.setOnClickListener(this);
         }

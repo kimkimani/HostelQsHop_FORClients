@@ -3,20 +3,21 @@ package ydkim2110.com.androidbarberbooking.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Barber implements Parcelable {
+public class Hostel implements Parcelable {
+//berber
 
-    private String name, username, password, barberId;
+    private String name, username, password, hostelId;
     private Double rating;
     private Long ratingTimes;
 
-    public Barber() {
+    public Hostel() {
     }
 
-    protected Barber(Parcel in) {
+    protected Hostel(Parcel in) {
         name = in.readString();
         username = in.readString();
         password = in.readString();
-        barberId = in.readString();
+        hostelId = in.readString();
         if (in.readByte() == 0) {
             rating = null;
         } else {
@@ -25,15 +26,15 @@ public class Barber implements Parcelable {
         }
     }
 
-    public static final Creator<Barber> CREATOR = new Creator<Barber>() {
+    public static final Creator<Hostel> CREATOR = new Creator<Hostel>() {
         @Override
-        public Barber createFromParcel(Parcel in) {
-            return new Barber(in);
+        public Hostel createFromParcel(Parcel in) {
+            return new Hostel(in);
         }
 
         @Override
-        public Barber[] newArray(int size) {
-            return new Barber[size];
+        public Hostel[] newArray(int size) {
+            return new Hostel[size];
         }
     };
 
@@ -77,12 +78,12 @@ public class Barber implements Parcelable {
         this.ratingTimes = ratingTimes;
     }
 
-    public String getBarberId() {
-        return barberId;
+    public String getHostelId() {
+        return hostelId;
     }
 
-    public void setBarberId(String barberId) {
-        this.barberId = barberId;
+    public void setHostelId(String hostelId) {
+        this.hostelId = hostelId;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class Barber implements Parcelable {
         dest.writeString(name);
         dest.writeString(username);
         dest.writeString(password);
-        dest.writeString(barberId);
+        dest.writeString(hostelId);
         if (rating == null) {
             dest.writeByte((byte) 0);
         } else {

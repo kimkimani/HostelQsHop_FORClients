@@ -2,44 +2,60 @@ package ydkim2110.com.androidbarberbooking.Model;
 
 import com.google.firebase.Timestamp;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import ydkim2110.com.androidbarberbooking.Database.CartItem;
 
 public class BookingInformation {
-    private String cityBook, customerName, customerPhone, time, barberId, barberName, salonId, salonName, salonAddress;
+    private String cityBook, customerName, customerPhone, time, hostelId, HostelName, HoatelAreaId, HoatelAreaName, HoatelAreaAddress;
     private Long slot;
     private Timestamp timestamp;
+    private double Price;
     private boolean done;
     private List<CartItem> cartItemList;
+
 
 
     public BookingInformation() {
     }
 
-    public BookingInformation(String cityBook, String customerName, String customerPhone, String time, String barbarId, String barberName, String salonId, String salonName, String salonAddress, Long slot, Timestamp timestamp, Boolean done) {
+    public BookingInformation(String cityBook, String customerName,
+                              String customerPhone, String time,
+                              String barbarId, String HostelName,
+                              String HoatelAreaId, String HoatelAreaName,
+                              String HoatelAreaAddress, Long slot, Timestamp timestamp, Boolean done,double Price) {
         this.cityBook = cityBook;
         this.customerName = customerName;
         this.customerPhone = customerPhone;
         this.time = time;
-        this.barberId = barbarId;
-        this.barberName = barberName;
-        this.salonId = salonId;
-        this.salonName = salonName;
-        this.salonAddress = salonAddress;
+        this.hostelId = barbarId;
+        this.HostelName = HostelName;
+        this.HoatelAreaId = HoatelAreaId;
+        this.HoatelAreaName = HoatelAreaName;
+        this.HoatelAreaAddress = HoatelAreaAddress;
         this.slot = slot;
         this.timestamp = timestamp;
         this.done = done;
+        this.Price=Price;
     }
+
+    public double getPrice() {
+        return Price;
+    }
+
 
     public String getCustomerName() {
         return customerName;
     }
 
+    public void setPrice(double price) {
+        this.Price=price;
+    }
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
-
     public String getCustomerPhone() {
         return customerPhone;
     }
@@ -56,44 +72,44 @@ public class BookingInformation {
         this.time = time;
     }
 
-    public String getBarberId() {
-        return barberId;
+    public String getHostelId() {
+        return hostelId;
     }
 
-    public void setBarberId(String barberId) {
-        this.barberId = barberId;
+    public void setHostelId(String hostelId) {
+        this.hostelId = hostelId;
     }
 
-    public String getBarberName() {
-        return barberName;
+    public String getHostelName() {
+        return HostelName;
     }
 
-    public void setBarberName(String barberName) {
-        this.barberName = barberName;
+    public void setHostelName(String hostelName) {
+        this.HostelName = hostelName;
     }
 
-    public String getSalonId() {
-        return salonId;
+    public String getHoatelAreaId() {
+        return HoatelAreaId;
     }
 
-    public void setSalonId(String salonId) {
-        this.salonId = salonId;
+    public void setHoatelAreaId(String hoatelAreaId) {
+        this.HoatelAreaId = hoatelAreaId;
     }
 
-    public String getSalonName() {
-        return salonName;
+    public String getHoatelAreaName() {
+        return HoatelAreaName;
     }
 
-    public void setSalonName(String salonName) {
-        this.salonName = salonName;
+    public void setHoatelAreaName(String hoatelAreaName) {
+        this.HoatelAreaName = hoatelAreaName;
     }
 
-    public String getSalonAddress() {
-        return salonAddress;
+    public String getHoatelAreaAddress() {
+        return HoatelAreaAddress;
     }
 
-    public void setSalonAddress(String salonAddress) {
-        this.salonAddress = salonAddress;
+    public void setHoatelAreaAddress(String hoatelAreaAddress) {
+        this.HoatelAreaAddress = hoatelAreaAddress;
     }
 
     public Long getSlot() {
@@ -128,11 +144,14 @@ public class BookingInformation {
         this.cityBook = cityBook;
     }
 
-    public List<CartItem> getCartItemList() {
-        return cartItemList;
-    }
+//    public  List<CartItem> getCartItemList() {
+//        return cartItemList;
+//    }
 
     public void setCartItemList(List<CartItem> cartItemList) {
+        this.cartItemList = cartItemList;
+    }
+    public void getCartItemList(List<CartItem> cartItemList) {
         this.cartItemList = cartItemList;
     }
 }

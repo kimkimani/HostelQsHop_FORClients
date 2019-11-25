@@ -2,8 +2,6 @@ package ydkim2110.com.androidbarberbooking;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -12,7 +10,7 @@ import dmax.dialog.SpotsDialog;
 import ydkim2110.com.androidbarberbooking.Adapter.MyViewPagerAdapter;
 import ydkim2110.com.androidbarberbooking.Common.Common;
 import ydkim2110.com.androidbarberbooking.Common.NonSwipeViewPager;
-import ydkim2110.com.androidbarberbooking.Model.Barber;
+import ydkim2110.com.androidbarberbooking.Model.Hostel;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.BarberDoneEvent;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.ConfirmBookingEvent;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.DisplayTimeSlotEvent;
@@ -20,15 +18,10 @@ import ydkim2110.com.androidbarberbooking.Model.EventBus.EnableNextButton;
 import ydkim2110.com.androidbarberbooking.Model.EventBus.UnableNextButton;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,7 +37,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class BookingActivity extends AppCompatActivity {
@@ -87,14 +79,14 @@ public class BookingActivity extends AppCompatActivity {
 
             // After choose salon
             if (Common.step == 1) {
-                if (Common.currentSalon != null) {
-                    loadBarberBySalon(Common.currentSalon.getSalonId());
+                if (Common.currentHostelArea != null) {
+                    loadBarberBySalon(Common.currentHostelArea.getHoatelAreaId());
                 }
             }
             // Pick time slot
             else if (Common.step == 2) {
-                if (Common.currentBarber != null) {
-                    loadTimeSlotOfBarber(Common.currentBarber.getBarberId());
+                if (Common.currentHostel != null) {
+                    loadTimeSlotOfBarber(Common.currentHostel.getHostelId());
                 }
             }
             // Confirm
@@ -116,9 +108,9 @@ public class BookingActivity extends AppCompatActivity {
 ////
 ////            int step = intent.getIntExtra(Common.KEY_STEP, 0);
 ////            if (step == 1) {
-////                Common.currentSalon = intent.getParcelableExtra(Common.KEY_SALON_STORE);
+////                Common.currentHostelArea = intent.getParcelableExtra(Common.KEY_SALON_STORE);
 ////            } else if (step == 2) {
-////                Common.currentBarber = intent.getParcelableExtra(Common.KEY_BARBER_SELECTED);
+////                Common.currentHostel = intent.getParcelableExtra(Common.KEY_BARBER_SELECTED);
 ////            } else if (step == 3) {
 ////                Common.currentTimeSlot = intent.getIntExtra(Common.KEY_TIME_SLOT, -1);
 ////            }
@@ -160,9 +152,9 @@ public class BookingActivity extends AppCompatActivity {
     public void buttonNextReceiver(EnableNextButton event) {
         int step = event.getStep();
         if (step == 1) {
-            Common.currentSalon = event.getSalon();
+            Common.currentHostelArea = event.getHostelArea();
         } else if (step == 2) {
-            Common.currentBarber = event.getBarber();
+            Common.currentHostel = event.getHostel();
         } else if (step == 3) {
             Common.currentTimeSlot = event.getTimeSlot();
         }
@@ -273,27 +265,20 @@ public class BookingActivity extends AppCompatActivity {
         EventBus.getDefault().postSticky(new DisplayTimeSlotEvent(true));
     }
 
-    /**
-     * Because here we use
-     * intent.putParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE, barbers);
-     * to send an List of Barber to other Fragment, so we need create Event Class with property is Barber list
-     * @author Kim Yong dae
-     * @version 1.0.0
-     * @since 2019-06-29 오전 8:39
-    **/
+
     private void loadBarberBySalon(String salonId) {
         Log.d(TAG, "loadBarberBySalon: called!!");
 
         mDialog.show();
-        Log.d(TAG, "loadBarberBySalon: Common city: " + Common.city);
+        Log.d(TAG, "loadBarberBySalon: Common gender: " + Common.gender);
 
-        // Now, select all barber of Salon
+        // Now, select all barber of hostelArea
         ///gender/gents/Branch/4jydSfTfDi3o26owKCFp/Hostel
 
-        if (!TextUtils.isEmpty(Common.city)) {
+        if (!TextUtils.isEmpty(Common.gender)) {
             barberRef = FirebaseFirestore.getInstance()
                     .collection("gender")
-                    .document(Common.city)
+                    .document(Common.gender)
                     .collection("Branch")
                     .document(salonId)
                     .collection("Hostel");
@@ -302,23 +287,23 @@ public class BookingActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            ArrayList<Barber> barbers = new ArrayList<>();
+                            ArrayList<Hostel> hostels = new ArrayList<>();
                             for (QueryDocumentSnapshot barberSnapshot : task.getResult()) {
-                                Barber barber = barberSnapshot.toObject(Barber.class);
-                                barber.setPassword(""); // Remove password because in client app
-                                barber.setBarberId(barberSnapshot.getId());
+                                Hostel hostel = barberSnapshot.toObject(Hostel.class);
+                                hostel.setPassword(""); // Remove password because in client app
+                                hostel.setHostelId(barberSnapshot.getId());
 
-                                barbers.add(barber);
+                                hostels.add(hostel);
                             }
 
-                            Log.d(TAG, "onComplete: Barbers Size: " + barbers.size());
+                            Log.d(TAG, "onComplete: Barbers Size: " + hostels.size());
 
                             // Send Broadcast to BookingStep2Fragment to load Recycler
                             //Intent intent = new Intent(Common.KEY_BARBER_LOAD_DONE);
-                            //intent.putParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE, barbers);
+                            //intent.putParcelableArrayListExtra(Common.KEY_BARBER_LOAD_DONE, hostels);
                             //mLocalBroadcastManager.sendBroadcast(intent);
 
-                            EventBus.getDefault().postSticky(new BarberDoneEvent(barbers));
+                            EventBus.getDefault().postSticky(new BarberDoneEvent(hostels));
 
                             mDialog.dismiss();
                         }

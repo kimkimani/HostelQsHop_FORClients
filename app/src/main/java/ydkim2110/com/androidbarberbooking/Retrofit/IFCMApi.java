@@ -10,7 +10,7 @@ import ydkim2110.com.androidbarberbooking.Model.FCMSendData;
 public interface IFCMApi {
     @Headers({
             "Content-Type:application/json",
-            "Authorization:key=AAAApYtjxso:APA91bFS4bnZdPRg5BlYjynwf0_tvrQRf664gMIZU-2HCoV1T4VXu52T3eOBXAt2ImJJIBOemWrPO44-gJBnKnpRyT6dDRKN_pb9ZUsOc9ceEx6bUoigIMPZSAidnfZ9dOhaCW2py4vx"
+            "Authorization:key=AAAAdfwNHKM:APA91bH4GcYqry39SE8Zb_3uWmFqx4YXeTv3_tcPw5bIZdyVET1B7REWAml4Sxuo7w3i8lZ7hx6atYfGV5hVbm4cTZZAwTzao8A8Y82pLnvhF_v8K-tJLWZjWZzQQimkQekHR8TkuwLV"
     })
     @POST("fcm/send")
     Observable<FCMResponse> sendNotification(@Body FCMSendData body);

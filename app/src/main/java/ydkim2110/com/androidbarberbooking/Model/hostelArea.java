@@ -3,31 +3,31 @@ package ydkim2110.com.androidbarberbooking.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Salon implements Parcelable {
+public class hostelArea implements Parcelable {
+//salon
+    private String name, address, website, phone, openHours, HoatelAreaId;
 
-    private String name, address, website, phone, openHours, salonId;
-
-    public Salon() {
+    public hostelArea() {
     }
 
-    protected Salon(Parcel in) {
+    protected hostelArea(Parcel in) {
         name = in.readString();
         address = in.readString();
         website = in.readString();
         phone = in.readString();
         openHours = in.readString();
-        salonId = in.readString();
+        HoatelAreaId = in.readString();
     }
 
-    public static final Creator<Salon> CREATOR = new Creator<Salon>() {
+    public static final Creator<hostelArea> CREATOR = new Creator<hostelArea>() {
         @Override
-        public Salon createFromParcel(Parcel in) {
-            return new Salon(in);
+        public hostelArea createFromParcel(Parcel in) {
+            return new hostelArea(in);
         }
 
         @Override
-        public Salon[] newArray(int size) {
-            return new Salon[size];
+        public hostelArea[] newArray(int size) {
+            return new hostelArea[size];
         }
     };
 
@@ -71,12 +71,12 @@ public class Salon implements Parcelable {
         this.openHours = openHours;
     }
 
-    public String getSalonId() {
-        return salonId;
+    public String getHoatelAreaId() {
+        return HoatelAreaId;
     }
 
-    public void setSalonId(String salonId) {
-        this.salonId = salonId;
+    public void setHoatelAreaId(String hoatelAreaId) {
+        this.HoatelAreaId = hoatelAreaId;
     }
 
     @Override
@@ -91,6 +91,6 @@ public class Salon implements Parcelable {
         dest.writeString(website);
         dest.writeString(phone);
         dest.writeString(openHours);
-        dest.writeString(salonId);
+        dest.writeString(HoatelAreaId);
     }
 }
